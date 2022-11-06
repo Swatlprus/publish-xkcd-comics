@@ -4,6 +4,13 @@ import os
 from environs import Env
 
 
+def find_errors_vk(response):
+    if response['error']:
+        error_code = response['error']['error_code']
+        error_msg = response['error']['error_msg']
+        raise requests.HTTPError(error_code, error_msg)
+
+
 def get_random_number():
     url = 'https://xkcd.com/info.0.json'
     response = requests.get(url)
@@ -36,6 +43,7 @@ def get_upload_url(token_vk, group_id):
     response = requests.get(url, params=params)
     response.raise_for_status()
     upload_response = response.json()
+    find_errors_vk(upload_response)
     return upload_response['response']['upload_url']
 
 
@@ -48,6 +56,7 @@ def upload_img(upload_url, filename):
         response = requests.post(url, files=files)
         response.raise_for_status()
     upload_response = response.json()
+    find_errors_vk(upload_response)
     server = upload_response['server']
     photo = upload_response['photo']
     vk_hash = upload_response['hash']
@@ -67,6 +76,7 @@ def save_wall_photo(token_vk, group_id, server, photo, vk_hash):
     response = requests.post(url_for_save, params=params)
     response.raise_for_status()
     save_vk_response = response.json()
+    find_errors_vk(save_vk_response)
     owner_id = save_vk_response['response'][0]['owner_id']
     media_id = save_vk_response['response'][0]['id']
     attachments = f'photo{owner_id}_{media_id}'
@@ -85,6 +95,8 @@ def publish_comics(token_vk, group_id, attachments, alt_text, filename):
     }
     publish_response = requests.post(url, params=params)
     publish_response.raise_for_status()
+    publish_xkcd_response = publish_response.json()
+    find_errors_vk(publish_xkcd_response)
     os.remove(filename)
 
 
@@ -96,14 +108,16 @@ def main():
     xkcd_number = get_random_number()
     try:
         alt_text, filename = download_xkcd(xkcd_number)
+        upload_url = get_upload_url(token_vk, vk_group_id)
+        server, photo, vk_hash = upload_img(upload_url, filename)
+        attachments = save_wall_photo(token_vk, vk_group_id, server, photo, vk_hash)
+        publish_comics(token_vk, vk_group_id, attachments, alt_text, filename)
     except ValueError:
         print('Value Error')
-    finally:
         os.remove(filename)
-    upload_url = get_upload_url(token_vk, vk_group_id)
-    server, photo, vk_hash = upload_img(upload_url, filename)
-    attachments = save_wall_photo(token_vk, vk_group_id, server, photo, vk_hash)
-    publish_comics(token_vk, vk_group_id, attachments, alt_text, filename)
+    except KeyError:
+        print('Key Error')
+        os.remove(filename)
 
 
 if __name__ == "__main__":
