@@ -15,13 +15,11 @@ pip install -r requirements.txt
 Пример содержимого файла `.env`
 
 ```
-CLIENT_ID=51464444
-GROUP_ID=216893211
+VK_GROUP_ID=216893211
 VK_TOKEN=vk1.a.K5Wa5Xa7UVqrpoOtGHCqlT2H57f9R_Xd4sujdfYFDysfj
 ```
 
-CLIENT_ID - ID приложения, через которое будут публиковаться комиксы.
-GROUP_ID - ID ВКонтакте сообщества, в котором будут публиковаться комиксы.  
+VK_GROUP_ID - ID ВКонтакте сообщества, в котором будут публиковаться комиксы.  
 VK_TOKEN - Токен для работы с API Вконтакте. Для работы должны быть права `scope=photos,groups,wall`.
 
 

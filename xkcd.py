@@ -92,13 +92,13 @@ def main():
     env = Env()
     env.read_env()
     token_vk = env("VK_TOKEN")
-    group_id = env("GROUP_ID")
+    vk_group_id = env("VK_GROUP_ID")
     xkcd_number = get_random_number()
     alt_text, filename = download_xkcd(xkcd_number)
-    upload_url = get_upload_url(token_vk, group_id)
+    upload_url = get_upload_url(token_vk, vk_group_id)
     server, photo, vk_hash = upload_img(upload_url, filename)
-    attachments = save_wall_photo(token_vk, group_id, server, photo, vk_hash)
-    publish_comics(token_vk, group_id, attachments, alt_text, filename)
+    attachments = save_wall_photo(token_vk, vk_group_id, server, photo, vk_hash)
+    publish_comics(token_vk, vk_group_id, attachments, alt_text, filename)
 
 
 if __name__ == "__main__":
