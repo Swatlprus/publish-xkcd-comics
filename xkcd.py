@@ -22,7 +22,8 @@ def download_xkcd(number_xkcd):
     response_img.raise_for_status()
     with open(filename, 'wb') as file:
         file.write(response_img.content)
-    return [response_xkcd['alt'], filename]
+    alt_text = response_xkcd['alt']
+    return [alt_text, filename]
 
 
 def get_upload_url(token_vk, group_id):
@@ -47,8 +48,10 @@ def upload_img(upload_url, filename):
         response = requests.post(url, files=files)
         response.raise_for_status()
         response_upload = response.json()
-        return [response_upload['server'], response_upload['photo'],\
-                response_upload['hash']]
+        server = response_upload['server']
+        photo = response_upload['photo']
+        hash = response_upload['hash']
+        return [server, photo, hash]
 
 
 def save_wall_photo(token_vk, group_id, server_photo_hash):
@@ -71,7 +74,7 @@ def save_wall_photo(token_vk, group_id, server_photo_hash):
     return attachments
 
 
-def publish_comics(token_vk, group_id, attachments, alternative_text, filename):
+def publish_comics(token_vk, group_id, attachments, alt_text, filename):
     url = 'https://api.vk.com/method/wall.post/'
     params = {
         'access_token': token_vk,
@@ -79,7 +82,7 @@ def publish_comics(token_vk, group_id, attachments, alternative_text, filename):
         'owner_id': f'-{group_id}',
         'from_group': 1,
         'attachments': attachments,
-        'message': alternative_text
+        'message': alt_text
     }
     response_publish = requests.post(url, params=params)
     response_publish.raise_for_status()
@@ -92,11 +95,11 @@ def main():
     token_vk = env("VK_TOKEN")
     group_id = env("GROUP_ID")
     number_xkcd = get_random_number()
-    alternative_text, filename = download_xkcd(number_xkcd)
+    alt_text, filename = download_xkcd(number_xkcd)
     upload_url = get_upload_url(token_vk, group_id)
     server_photo_hash = upload_img(upload_url, filename)
     attachments = save_wall_photo(token_vk, group_id, server_photo_hash)
-    publish_comics(token_vk, group_id, attachments, alternative_text, filename)
+    publish_comics(token_vk, group_id, attachments, alt_text, filename)
 
 
 if __name__ == "__main__":
