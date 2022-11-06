@@ -20,9 +20,9 @@ def download_xkcd(xkcd_number):
     xkcd_response = response.json()
     img_response = requests.get(xkcd_response['img'])
     img_response.raise_for_status()
+    alt_text = xkcd_response['alt']
     with open(filename, 'wb') as file:
         file.write(img_response.content)
-    alt_text = xkcd_response['alt']
     return [alt_text, filename]
 
 
@@ -94,7 +94,12 @@ def main():
     token_vk = env("VK_TOKEN")
     vk_group_id = env("VK_GROUP_ID")
     xkcd_number = get_random_number()
-    alt_text, filename = download_xkcd(xkcd_number)
+    try:
+        alt_text, filename = download_xkcd(xkcd_number)
+    except ValueError:
+        print('Value Error')
+    finally:
+        os.remove(filename)
     upload_url = get_upload_url(token_vk, vk_group_id)
     server, photo, vk_hash = upload_img(upload_url, filename)
     attachments = save_wall_photo(token_vk, vk_group_id, server, photo, vk_hash)
