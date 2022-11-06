@@ -4,8 +4,6 @@ import os
 from environs import Env
 
 
-
-
 def get_random_number():
     url = 'https://xkcd.com/info.0.json'
     response = requests.get(url)
@@ -19,7 +17,7 @@ def download_xkcd(number_xkcd):
     filename = 'comics_xkcd.png'
     response = requests.get(url)
     response.raise_for_status()
-    response_xkcd =  response.json()
+    response_xkcd = response.json()
     response_img = requests.get(response_xkcd['img'])
     response_img.raise_for_status()
     with open(filename, 'wb') as file:
@@ -44,12 +42,13 @@ def upload_img(upload_url, filename):
     with open(filename, 'rb') as file:
         url = upload_url
         files = {
-            'photo': file, 
+            'photo': file,
         }
         response = requests.post(url, files=files)
         response.raise_for_status()
-        response_upload =  response.json()
-        return [response_upload['server'], response_upload['photo'], response_upload['hash']]
+        response_upload = response.json()
+        return [response_upload['server'], response_upload['photo'],\
+                response_upload['hash']]
 
 
 def save_wall_photo(token_vk, group_id, server_photo_hash):
