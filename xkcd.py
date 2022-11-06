@@ -47,11 +47,11 @@ def upload_img(upload_url, filename):
         }
         response = requests.post(url, files=files)
         response.raise_for_status()
-        response_upload = response.json()
-        server = response_upload['server']
-        photo = response_upload['photo']
-        hash = response_upload['hash']
-        return [server, photo, hash]
+    response_upload = response.json()
+    server = response_upload['server']
+    photo = response_upload['photo']
+    hash = response_upload['hash']
+    return [server, photo, hash]
 
 
 def save_wall_photo(token_vk, group_id, server_photo_hash):
