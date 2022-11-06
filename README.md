@@ -15,9 +15,9 @@ pip install -r requirements.txt
 Пример содержимого файла `.env`
 
 ```
-CLIENT_ID = '51464444'
-GROUP_ID = '216893211'
-VK_TOKEN = 'vk1.a.K5Wa5Xa7UVqrpoOtGHCqlT2H57f9R_Xd4sujdfYFDysfj'
+CLIENT_ID=51464444
+GROUP_ID=216893211
+VK_TOKEN=vk1.a.K5Wa5Xa7UVqrpoOtGHCqlT2H57f9R_Xd4sujdfYFDysfj
 ```
 
 CLIENT_ID - ID приложения, через которое будут публиковаться комиксы.
