@@ -50,12 +50,12 @@ def upload_img(upload_url, filename):
     response_upload = response.json()
     server = response_upload['server']
     photo = response_upload['photo']
-    hash = response_upload['hash']
-    return [server, photo, hash]
+    vk_hash = response_upload['hash']
+    return [server, photo, vk_hash]
 
 
-def save_wall_photo(token_vk, group_id, server_photo_hash):
-    server, photo, hash = server_photo_hash
+def save_wall_photo(token_vk, group_id, server_photo_vk_hash):
+    server, photo, vk_hash = server_photo_vk_hash
     url_for_save = 'https://api.vk.com/method/photos.saveWallPhoto/'
     params = {
         'access_token': token_vk,
@@ -63,7 +63,7 @@ def save_wall_photo(token_vk, group_id, server_photo_hash):
         'v': '5.131',
         'server': server,
         'photo': photo,
-        'hash': hash
+        'hash': vk_hash
     }
     response = requests.post(url_for_save, params=params)
     response.raise_for_status()
@@ -97,8 +97,8 @@ def main():
     number_xkcd = get_random_number()
     alt_text, filename = download_xkcd(number_xkcd)
     upload_url = get_upload_url(token_vk, group_id)
-    server_photo_hash = upload_img(upload_url, filename)
-    attachments = save_wall_photo(token_vk, group_id, server_photo_hash)
+    server_photo_vk_hash = upload_img(upload_url, filename)
+    attachments = save_wall_photo(token_vk, group_id, server_photo_vk_hash)
     publish_comics(token_vk, group_id, attachments, alt_text, filename)
 
 
