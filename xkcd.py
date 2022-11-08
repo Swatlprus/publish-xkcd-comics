@@ -112,11 +112,7 @@ def main():
         server, photo, vk_hash = upload_img(upload_url, filename)
         attachments = save_wall_photo(token_vk, vk_group_id, server, photo, vk_hash)
         publish_comics(token_vk, vk_group_id, attachments, alt_text, filename)
-    except ValueError:
-        print('Value Error')
-        os.remove(filename)
-    except KeyError:
-        print('Key Error')
+    finally:
         os.remove(filename)
 
 
