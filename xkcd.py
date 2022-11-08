@@ -54,7 +54,7 @@ def upload_img(upload_url, filename):
             'photo': file,
         }
         response = requests.post(url, files=files)
-        response.raise_for_status()
+    response.raise_for_status()
     upload_response = response.json()
     find_errors_vk(upload_response)
     server = upload_response['server']
