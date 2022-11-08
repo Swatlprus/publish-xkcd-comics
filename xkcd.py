@@ -30,7 +30,7 @@ def download_xkcd(xkcd_number):
     alt_text = xkcd_response['alt']
     with open(filename, 'wb') as file:
         file.write(img_response.content)
-    return [alt_text, filename]
+    return alt_text, filename
 
 
 def get_upload_url(token_vk, group_id):
@@ -60,7 +60,7 @@ def upload_img(upload_url, filename):
     server = upload_response['server']
     photo = upload_response['photo']
     vk_hash = upload_response['hash']
-    return [server, photo, vk_hash]
+    return server, photo, vk_hash
 
 
 def save_wall_photo(token_vk, group_id, server, photo, vk_hash):
