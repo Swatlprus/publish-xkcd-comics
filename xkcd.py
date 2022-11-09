@@ -97,7 +97,6 @@ def publish_comics(token_vk, group_id, attachments, alt_text, filename):
     publish_response.raise_for_status()
     publish_xkcd_response = publish_response.json()
     find_errors_vk(publish_xkcd_response)
-    os.remove(filename)
 
 
 def main():
